@@ -13,3 +13,9 @@ It requires no additional resources and it is developed in pure PL/SQL.
 2. PKB file (package body)
 
 New Package ZT_SVG is created in database schema.
+
+## How to use PL/SQL package
+Procedure and Function descriptions with input and output parameters are located in package definition script.
+
+## Demo Script and Application
+Demo script with demo package and APEX application is located under "demo" directory.
