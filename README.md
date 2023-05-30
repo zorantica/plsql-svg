@@ -16,6 +16,14 @@ New Package ZT_SVG is created in database schema.
 
 ## How to use PL/SQL package
 Procedure and Function descriptions with input and output parameters are located in package definition script.
+First initialize the image using p_new_image procedure.
+Then draw elements using various procedures such as p_draw_line, p_draw_ellipse...
+At the end finish the image using function f_finish_image, which returns XML source of SVG image.
 
 ## Demo Script and Application
 Demo script with demo package and APEX application is located under "demo" directory.
+First execute the script tables_and_data.sql, which will create demo tables and insert data.
+Then install demo database package ZT_SVG_DEMO (specification and body).
+At the end import APEX demo aplication and run it.
+
+![demo/demo_01.png](demo/demo_01.png)
