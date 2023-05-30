@@ -1,5 +1,5 @@
 # Oracle PL/SQL Package for SVG Images Generation
-SVG Images Generator PL/SQL package provides functionality to quickly and efficiently generate SVG images directly from Oracle database.
+SVG Images Generator PL/SQL package provides functionality to quickly and efficiently generate SVG images directly from the Oracle database.
 
 It requires no additional resources and it is developed in pure PL/SQL.
 
