@@ -957,7 +957,7 @@ BEGIN
 END p_insert_image;
 
 
-PROCEDURE p_use (
+PROCEDURE p_use_01 (
     p_logos_no pls_integer
 ) IS
 
@@ -1015,10 +1015,10 @@ BEGIN
     
     htpprn( '<pre>' || lcImage || '</pre>' );
     
-END p_use;
+END p_use_01;
 
 
-PROCEDURE p_use2 IS
+PROCEDURE p_use_02 IS
 
     lcImage clob;
     lnX number;
@@ -1084,7 +1084,7 @@ BEGIN
     
     htpprn( '<pre>' || lcImage || '</pre>' );
     
-END p_use2;
+END p_use_02;
 
 PROCEDURE p_javascript_01 IS
 
@@ -1360,6 +1360,73 @@ BEGIN
     htpprn( '<pre>' || lcImage || '</pre>' );
 
 END p_parking_demo;
+
+
+PROCEDURE p_calc_graph (
+    p_formula varchar2,
+    p_from number,
+    p_to number,
+    p_segments number,
+    p_offset_y number
+) IS
+
+    lcImage clob;
+    lrCommands zt_svg.t_path_commands := zt_svg.t_path_commands();
+
+    TYPE r_xy IS RECORD (
+        x number,
+        y number
+    );
+    
+    TYPE t_xy IS TABLE OF r_xy;
+    lrXY t_xy;
+
+BEGIN
+    zt_svg.p_new_image (
+        p_image_width => 600,
+        p_image_height => 600,
+        p_viewbox_X => 0,
+        p_viewbox_Y => 0,
+        p_viewbox_width => 100,
+        p_viewbox_height => 100
+    );
+    
+    EXECUTE IMMEDIATE '
+SELECT
+    x,
+    ' || p_formula || ' as y
+FROM
+    (
+    SELECT
+        :p_from + (level - 1) * (:p_to - :p_from) / :p_segments as x
+    FROM dual
+    CONNECT BY level < :p_segments
+    )
+' 
+    BULK COLLECT INTO lrXY
+    USING p_from, p_to, p_from, p_segments, p_segments;
+    
+    FOR t IN 2 .. lrXY.count LOOP
+        zt_svg.p_add_path_command(
+            p_commands => lrCommands,
+            p_command => zt_svg.gcPathCmdLine,
+            p_x => lrXY(t).x,
+            p_y => p_offset_y - lrXY(t).y
+        );
+    END LOOP;
+    
+    zt_svg.p_draw_path (
+        p_start_x => lrXY(1).x,
+        p_start_y => p_offset_y - lrXY(1).y,
+        p_path_commands => lrCommands,
+        p_close_path_yn => 'N'
+    );
+
+    lcImage := zt_svg.f_finish_image;
+    
+    htpprn( '<pre>' || lcImage || '</pre>' );
+
+END p_calc_graph;
 
 
 END zt_svg_demo;

@@ -77,11 +77,11 @@ PROCEDURE p_insert_image (
     p_images_no pls_integer
 );
 
-PROCEDURE p_use (
+PROCEDURE p_use_01 (
     p_logos_no pls_integer
 );
 
-PROCEDURE p_use2;
+PROCEDURE p_use_02;
 
 PROCEDURE p_javascript_01;
 
@@ -91,5 +91,14 @@ PROCEDURE p_javascript_02;
 PROCEDURE p_parking_demo (
     p_floor_id varchar2
 );
+
+PROCEDURE p_calc_graph (
+    p_formula varchar2,
+    p_from number,
+    p_to number,
+    p_segments number,
+    p_offset_y number
+);
+
 
 END zt_svg_demo;
