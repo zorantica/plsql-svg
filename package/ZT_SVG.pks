@@ -87,6 +87,12 @@ gcPathCoordinateRelative CONSTANT varchar2(50) := 'R';
 gcElementImage CONSTANT varchar2(50) := 'image';
 gcElementUse CONSTANT varchar2(50) := 'use';
 
+--text align
+gcTextAlignStart CONSTANT varchar2(50) := 'start';
+gcTextAlignMiddle CONSTANT varchar2(50) := 'middle';
+gcTextAlignEnd CONSTANT varchar2(50) := 'end';
+
+
 
 --------------------------  TYPES  --------------------------
 TYPE r_point IS RECORD (
@@ -199,7 +205,8 @@ PROCEDURE p_new_image (
     p_viewbox_width number default null,
     p_viewbox_height number default null,
     p_image_width varchar2 default null,  --number or percentage
-    p_image_height varchar2 default null  --number or percentage
+    p_image_height varchar2 default null,  --number or percentage
+    p_custom_attributes varchar2 default null
 );
 
 
@@ -347,11 +354,14 @@ FUNCTION f_draw_line (
     p_x2 number,
     p_y2 number,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) RETURN pls_integer;
 
 PROCEDURE p_draw_line (
@@ -362,11 +372,14 @@ PROCEDURE p_draw_line (
     p_x2 number,
     p_y2 number,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 );
 
 
@@ -377,14 +390,16 @@ FUNCTION f_draw_circle (
     p_center_x number,
     p_center_y number,
     p_radius number,
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
     p_transform r_transform default null,
-    p_custom_attributes varchar2 default null
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) RETURN pls_integer;
 
 PROCEDURE p_draw_circle (
@@ -393,14 +408,16 @@ PROCEDURE p_draw_circle (
     p_center_x number,
     p_center_y number,
     p_radius number,
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
     p_transform r_transform default null,
-    p_custom_attributes varchar2 default null
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 );
 
 
@@ -412,13 +429,16 @@ FUNCTION f_draw_ellipse (
     p_center_y number,
     p_radius_x number,
     p_radius_y number,
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) RETURN pls_integer;
 
 PROCEDURE p_draw_ellipse (
@@ -428,13 +448,16 @@ PROCEDURE p_draw_ellipse (
     p_center_y number,
     p_radius_x number,
     p_radius_y number,
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 );
 
 
@@ -447,13 +470,16 @@ FUNCTION f_draw_rectangle (
     p_height number,
     p_radius_x number default null,
     p_radius_y number default null,
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) RETURN pls_integer;
 
 PROCEDURE p_draw_rectangle (
@@ -465,13 +491,16 @@ PROCEDURE p_draw_rectangle (
     p_height number,
     p_radius_x number default null,
     p_radius_y number default null,
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 );
 
 
@@ -480,13 +509,16 @@ FUNCTION f_draw_polyline (
     p_id varchar2 default null,
     p_points zt_svg.t_points,
     p_close_yn varchar2 default 'N',
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) RETURN pls_integer;
 
 PROCEDURE p_draw_polyline (
@@ -494,13 +526,16 @@ PROCEDURE p_draw_polyline (
     p_id varchar2 default null,
     p_points zt_svg.t_points,
     p_close_yn varchar2 default 'N',
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 );
 
 
@@ -515,13 +550,18 @@ FUNCTION f_draw_text (
     p_text varchar2,
     p_font_ref varchar2 default null,
     p_font r_font default grDefaultFont,
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null,
+    p_align_h varchar2 default null,  --values: start, middle, end
+    p_align_v varchar2 default null   --values: start, middle, end
 ) RETURN pls_integer;
 
 PROCEDURE p_draw_text (
@@ -535,13 +575,18 @@ PROCEDURE p_draw_text (
     p_text varchar2,
     p_font_ref varchar2 default null,
     p_font r_font default grDefaultFont,
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null,
+    p_align_h varchar2 default null,
+    p_align_v varchar2 default null
 );
 
 
@@ -554,13 +599,16 @@ FUNCTION f_draw_path (
     p_start_y number default 0,
     p_path_commands t_path_commands,
     p_close_path_yn varchar2 default 'N',
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) RETURN pls_integer;
 
 PROCEDURE p_draw_path (
@@ -570,13 +618,16 @@ PROCEDURE p_draw_path (
     p_start_y number default 0,
     p_path_commands t_path_commands,
     p_close_path_yn varchar2 default 'N',
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 );
 
 
@@ -584,13 +635,17 @@ PROCEDURE p_draw_path (
 FUNCTION f_draw_custom (
     p_image_reference varchar2 default zt_svg.gcDefaultIndex,
     p_custom_tag clob,
-    p_url r_url default null
+    p_url r_url default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) RETURN pls_integer;
 
 PROCEDURE p_draw_custom (
     p_image_reference varchar2 default zt_svg.gcDefaultIndex,
     p_custom_tag clob,
-    p_url r_url default null
+    p_url r_url default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 );
 
 
@@ -604,8 +659,11 @@ FUNCTION f_insert_image (
     p_height number default null,
     p_image_url varchar2,
     p_image_or_use varchar2 default gcElementImage,
+    p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_tooltip varchar2 default null
 ) RETURN pls_integer;
 
 PROCEDURE p_insert_image (
@@ -617,37 +675,47 @@ PROCEDURE p_insert_image (
     p_height number default null,
     p_image_url varchar2,
     p_image_or_use varchar2 default gcElementImage,
+    p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_tooltip varchar2 default null
 );
 
 
 FUNCTION f_draw_group (
     p_image_reference varchar2 default zt_svg.gcDefaultIndex,
     p_id varchar2 default null,
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) RETURN pls_integer;
 
 PROCEDURE p_draw_group (
     p_image_reference varchar2 default zt_svg.gcDefaultIndex,
     p_id varchar2 default null,
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 );
 
 PROCEDURE p_draw_group_end (
-    p_image_reference varchar2 default zt_svg.gcDefaultIndex
+    p_image_reference varchar2 default zt_svg.gcDefaultIndex,
+    p_draw_in_defs_yn varchar2 default 'N'
 );
 
 

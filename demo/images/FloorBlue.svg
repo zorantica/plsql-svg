@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="1024"
+   height="768"
+   viewBox="0 0 1024 768"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
+   sodipodi:docname="Floor.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     showgrid="true"
+     inkscape:zoom="1.1614583"
+     inkscape:cx="508.41256"
+     inkscape:cy="384"
+     inkscape:window-width="1920"
+     inkscape:window-height="1137"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     showguides="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2772"
+       dotted="false"
+       spacingx="5"
+       spacingy="5" />
+  </sodipodi:namedview>
+  <defs
+     id="defs2">
+    <marker
+       style="overflow:visible"
+       id="marker9048"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Arrow2"
+       markerWidth="7.6999998"
+       markerHeight="5.5999999"
+       viewBox="0 0 7.7 5.6"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.7)"
+         d="M -2,-4 9,0 -2,4 c 2,-2.33 2,-5.66 0,-8 z"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         id="path9046" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow2"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Arrow2"
+       markerWidth="7.6999998"
+       markerHeight="5.5999999"
+       viewBox="0 0 7.7 5.6"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.7)"
+         d="M -2,-4 9,0 -2,4 c 2,-2.33 2,-5.66 0,-8 z"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         id="arrow2L" />
+    </marker>
+    <pattern
+       inkscape:collect="always"
+       xlink:href="#Strips1_1"
+       id="pattern8466"
+       patternTransform="matrix(3.5906889,4.1891369,-3.4800893,2.9829337,0,0)" />
+    <pattern
+       inkscape:collect="always"
+       patternUnits="userSpaceOnUse"
+       width="2"
+       height="1"
+       patternTransform="translate(0,0) scale(10,10)"
+       id="Strips1_1"
+       inkscape:stockid="Stripes 1:1"
+       inkscape:isstock="true">
+      <rect
+         style="fill:black;stroke:none"
+         x="0"
+         y="-0.5"
+         width="1"
+         height="2"
+         id="rect6591" />
+    </pattern>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#aaccff;stroke:#000000;stroke-width:4.999;stroke-dasharray:none"
+       id="rect788"
+       width="975"
+       height="550.00024"
+       x="25"
+       y="49.999878" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 875,600 V 425"
+       id="path5321" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 750.5,600 V 425"
+       id="path5332" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 625.5,600 V 425"
+       id="path5334" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 500.5,600 V 425"
+       id="path5336" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 375.5,600 V 425"
+       id="path5338" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 250.5,600 V 425"
+       id="path5351" />
+    <rect
+       style="fill:url(#pattern8466);fill-opacity:1;stroke:none"
+       id="rect5593"
+       width="225"
+       height="175"
+       x="25"
+       y="425"
+       ry="0" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 25.000003,299.5 H 200"
+       id="path8468" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 25.000003,175.5 H 200"
+       id="path8470" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 875,225 V 50"
+       id="path8490" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 750.5,225 V 50"
+       id="path8492" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 625.5,225 V 50"
+       id="path8494" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 500.5,225 V 50"
+       id="path8496" />
+    <path
+       style="fill:#000000;stroke:none;stroke-width:4.999;stroke-dasharray:none"
+       d="M 1000,325 H 825"
+       id="path8605" />
+    <path
+       style="fill:#000000;stroke:#000000;stroke-width:2.5;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2)"
+       d="m 912.5,325 h -225"
+       id="path8663" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
+       x="731.40625"
+       y="311.71094"
+       id="text8978"><tspan
+         sodipodi:role="line"
+         id="tspan8976"
+         x="731.40625"
+         y="311.71094">Drive Direction</tspan></text>
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:2.5;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker9048)"
+       d="M 500,325 C 325,325 325,200 325,200"
+       id="path9040" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#002b22;fill-opacity:1;stroke:none;stroke-width:2.5;stroke-dasharray:none;stroke-opacity:1"
+       x="271.70312"
+       y="373.75"
+       id="text9958"><tspan
+         sodipodi:role="line"
+         id="tspan9956"
+         x="271.70312"
+         y="373.75">BLUE FLOOR</tspan></text>
+  </g>
+</svg>

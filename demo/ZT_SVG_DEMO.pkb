@@ -962,7 +962,7 @@ PROCEDURE p_use (
 ) IS
 
     lcImage clob;
-     lnX number;
+    lnX number;
     lnY number;
 
 BEGIN
@@ -1017,6 +1017,74 @@ BEGIN
     
 END p_use;
 
+
+PROCEDURE p_use2 IS
+
+    lcImage clob;
+    lnX number;
+    lnY number;
+
+BEGIN
+    zt_svg.p_new_image (
+        p_image_width => 700,
+        p_image_height => 600
+    );
+    
+    --draw a group with circle and rectangle in a defs section
+    zt_svg.p_draw_group (
+        p_id => 'circRect',
+        p_draw_in_defs_yn => 'Y'
+    );
+    
+    zt_svg.p_draw_circle (
+        p_center_x => 50,
+        p_center_y => 50,
+        p_radius => 50,
+        p_draw_in_defs_yn => 'Y'
+    );
+
+    zt_svg.p_draw_rectangle (
+        p_top_left_x => 100,
+        p_top_left_y => 0,
+        p_width => 200,
+        p_height => 100,
+        p_draw_in_defs_yn => 'Y'
+    );
+
+    zt_svg.p_draw_group_end (
+        p_draw_in_defs_yn => 'Y'
+    );
+
+
+    --re-use and display group in image multiple times
+    zt_svg.p_insert_image (
+        p_x => 100,
+        p_y => 100,
+        p_image_url => '#circRect',
+        p_image_or_use => zt_svg.gcElementUse
+    );
+
+    zt_svg.p_insert_image (
+        p_x => 300,
+        p_y => 300,
+        p_image_url => '#circRect',
+        p_image_or_use => zt_svg.gcElementUse,
+        p_transform => 
+            zt_svg.f_get_transform(
+                p_rotate_angle => -45,
+                p_origin_x => 100,
+                p_origin_y => 500,
+                p_scale_x => 0.5,
+                p_scale_y => 0.5
+            )
+    );
+    
+    
+    lcImage := zt_svg.f_finish_image;
+    
+    htpprn( '<pre>' || lcImage || '</pre>' );
+    
+END p_use2;
 
 PROCEDURE p_javascript_01 IS
 
@@ -1088,22 +1156,31 @@ BEGIN
     );
 
     zt_svg.p_create_class (
-        p_class_name => '.oneCircle',
+        p_class_name => '.fillMe',
         p_class_style => 'fill:pink;'
     );
 
     zt_svg.p_create_class (
-        p_class_name => '.oneCircle:hover',
+        p_class_name => '.fillMe:hover',
         p_class_style => 'fill-opacity:0.5; cursor:pointer;'
     );
 
-    --circles
+    --circle and rectangle
     zt_svg.p_draw_circle (
         p_center_x => 100,
         p_center_y => 100,
         p_radius => 50,
-        p_custom_attributes => 'onclick="myFunction()"',
-        p_class_name => 'oneCircle'
+        p_custom_attributes => 'onclick="myFunction(''You clicked on circle'')"',
+        p_class_name => 'fillMe'
+    );
+
+    zt_svg.p_draw_rectangle (
+        p_top_left_x => 200,
+        p_top_left_y => 10,
+        p_width => 200,
+        p_height => 100,
+        p_custom_attributes => 'onclick="myFunction(''You clicked on rectangle'')"',
+        p_class_name => 'fillMe'
     );
 
 
@@ -1112,5 +1189,177 @@ BEGIN
     htpprn( '<pre>' || lcImage || '</pre>' );
     
 END p_javascript_02;
+
+
+
+PROCEDURE p_parking_demo (
+    p_floor_id varchar2
+) IS
+
+    lcImage clob;
+    lcFontRef varchar2(20);
+   
+    CURSOR c_floor IS
+        SELECT *
+        FROM parking_floors 
+        WHERE floor_id = p_floor_id
+    ;
+    lrFloor c_floor%ROWTYPE;
+    
+    CURSOR c_lots IS
+        SELECT *
+        FROM parking_lots
+        WHERE floor_id = p_floor_id
+    ;
+
+BEGIN
+    zt_svg.p_new_image (
+        p_image_width => 1024,
+        p_image_height => 768
+    );
+
+
+    --draw background floor shema
+    OPEN c_floor;
+    FETCH c_floor INTO lrFloor;
+    CLOSE c_floor;
+    
+    zt_svg.p_insert_image (
+        p_x => 0,
+        p_y => 0,
+        p_width => 1024,
+        p_height => 768,
+        p_image_url => v('APP_IMAGES') || lrFloor.background_image
+    );
+
+
+    --set classes
+    zt_svg.p_create_class (
+        p_class_name => '.parkingLot',
+        p_class_style => 'fill:white; fill-opacity:0; stroke:none;'
+    );
+
+    zt_svg.p_create_class (
+        p_class_name => '.parkingLot:hover',
+        p_class_style => 'fill-opacity:0.5;'
+    );
+
+    zt_svg.p_create_class (
+        p_class_name => '.parkingLotNumber',
+        p_class_style => 'fill:black; stroke:none;'
+    );
+    
+    --default font for lot numbers 
+    zt_svg.p_create_shared_font (
+        p_reference => lcFontRef,
+        p_font_size => 24
+    );    
+
+    --draw cars/motorcycles in parking lots (if occupied) and transparent rectangles with hover
+    FOR lot IN c_lots LOOP
+
+        if lot.occupied_yn = 'Y' then
+            zt_svg.p_insert_image (
+                p_x => lot.position_x,
+                p_y => lot.position_y,
+                p_height => 
+                    CASE lot.lot_type
+                        WHEN 'C' THEN 80
+                        WHEN 'M' THEN 60
+                    END
+                ,
+                p_id => 'parkLotCar' || lot.lot_id,
+                p_transform => 
+                    zt_svg.f_get_transform(
+                        p_rotate_angle => lot.rotate_angle,
+                        p_rotate_center_x => lot.position_x,
+                        p_rotate_center_y => lot.position_y,
+                        p_translate_x => 
+                            CASE  
+                                WHEN lot.lot_type = 'C' AND lot.rotate_angle = 90 THEN 5
+                                WHEN lot.lot_type = 'C' AND lot.rotate_angle = -90 THEN -165
+                                WHEN lot.lot_type = 'C' AND lot.rotate_angle = 180 THEN -165
+                                WHEN lot.lot_type = 'M' AND lot.rotate_angle = 0 THEN 25
+                                WHEN lot.lot_type = 'M' AND lot.rotate_angle = -90 THEN -130
+                                WHEN lot.lot_type = 'M' AND lot.rotate_angle = 90 THEN 30
+                            END,
+                        p_translate_y => 
+                            CASE 
+                                WHEN lot.lot_type = 'C' AND lot.rotate_angle = 90 THEN -100
+                                WHEN lot.lot_type = 'C' AND lot.rotate_angle = -90 THEN 20
+                                WHEN lot.lot_type = 'C' AND lot.rotate_angle = 180 THEN -100
+                                WHEN lot.lot_type = 'M' AND lot.rotate_angle = 0 THEN 5
+                                WHEN lot.lot_type = 'M' AND lot.rotate_angle = -90 THEN 5
+                                WHEN lot.lot_type = 'M' AND lot.rotate_angle = 90 THEN -65
+                            END
+                    ),
+                p_image_url => 
+                    v('APP_IMAGES') || 
+                    CASE 
+                        WHEN lot.lot_type = 'C' AND lot.occupied_until - trunc(sysdate) > 7 THEN 'svg/parking/CarGreen.svg'
+                        WHEN lot.lot_type = 'C' AND lot.occupied_until - trunc(sysdate) between 0 and 7 THEN 'svg/parking/CarOrange.svg'
+                        WHEN lot.lot_type = 'C' AND lot.occupied_until - trunc(sysdate) < 0 THEN 'svg/parking/CarRed.svg'
+                        WHEN lot.lot_type = 'M' AND lot.occupied_until - trunc(sysdate) > 7 THEN 'svg/parking/MotorcycleGreen.svg'
+                        WHEN lot.lot_type = 'M' AND lot.occupied_until - trunc(sysdate) between 0 and 7 THEN 'svg/parking/MotorcycleOrange.svg'
+                        WHEN lot.lot_type = 'M' AND lot.occupied_until - trunc(sysdate) < 0 THEN 'svg/parking/MotorcycleRed.svg'
+                    END
+            );
+        end if;
+
+        zt_svg.p_draw_text (
+            p_x => 
+                CASE  
+                    WHEN lot.rotate_angle in (90, -90) THEN lot.position_x + lot.width / 2
+                    WHEN (lot.lot_type = 'C' AND lot.rotate_angle = 180) OR (lot.lot_type = 'M' AND lot.rotate_angle = 0) THEN lot.position_x + lot.width + 5
+                END,
+            p_y => 
+                CASE  
+                    WHEN (lot.lot_type = 'C' AND lot.rotate_angle = 90) OR (lot.lot_type = 'M' AND lot.rotate_angle = -90) THEN lot.position_y - 5
+                    WHEN (lot.lot_type = 'C' AND lot.rotate_angle = -90) OR (lot.lot_type = 'M' AND lot.rotate_angle = 90) THEN lot.position_y + lot.height + 20
+                    WHEN (lot.lot_type = 'C' AND lot.rotate_angle = 180) OR (lot.lot_type = 'M' AND lot.rotate_angle = 0) THEN lot.position_y + lot.height / 2
+                END,
+            p_text => lot.lot_id,
+            p_font_ref => lcFontRef,
+            p_class_name => 'parkingLotNumber',
+            p_align_h => 
+                CASE  
+                    WHEN lot.lot_type = 'C' AND lot.rotate_angle in (90, -90) THEN zt_svg.gcTextAlignMiddle
+                    ELSE null
+                END
+        );
+
+        
+        zt_svg.p_draw_rectangle (
+            p_top_left_x => lot.position_x,
+            p_top_left_y => lot.position_y,
+            p_width => lot.width,
+            p_height => lot.height,
+            p_class_name => 'parkingLot',
+            p_id => 'parkLotRect' || lot.lot_id,
+            p_tooltip => 
+                CASE 
+                    WHEN lot.occupied_yn = 'Y' THEN nvl(lot.occupied_plate, '(plate unknown)') || chr(10) || nvl(lot.occupied_by, '(owner unknown)') || chr(10) || to_char(lot.occupied_until)
+                    ELSE null
+                END,
+            p_url => 
+                zt_svg.f_get_url ( 
+                    p_url => 
+                        apex_page.get_url (
+                            p_page => 15,
+                            p_items => 'P15_LOT_ID',
+                            p_values => lot.lot_id
+                        )
+                )
+        );
+        
+    END LOOP;
+    
+
+    lcImage := zt_svg.f_finish_image;
+    
+    htpprn( '<pre>' || lcImage || '</pre>' );
+
+END p_parking_demo;
+
 
 END zt_svg_demo;

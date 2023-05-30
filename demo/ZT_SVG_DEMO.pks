@@ -81,8 +81,15 @@ PROCEDURE p_use (
     p_logos_no pls_integer
 );
 
+PROCEDURE p_use2;
+
 PROCEDURE p_javascript_01;
 
 PROCEDURE p_javascript_02;
+
+
+PROCEDURE p_parking_demo (
+    p_floor_id varchar2
+);
 
 END zt_svg_demo;

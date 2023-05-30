@@ -73,6 +73,8 @@ TYPE r_text IS RECORD (
     dx number,
     dy number,
     text varchar2(32000),
+    align_h varchar2(20),
+    align_v varchar2(20),
     font_reference varchar2(128),
     font zt_svg.r_font
 );
@@ -106,6 +108,8 @@ TYPE r_shape IS RECORD (
     url zt_svg.r_url,
     transform zt_svg.r_transform,
     custom_attributes varchar2(32000),
+    draw_in_defs_yn varchar2(1),
+    tooltip varchar2(4000),
     line_data r_line,
     circle_data r_circle,
     ellipse_data r_ellipse,
@@ -126,6 +130,7 @@ TYPE r_image IS RECORD (
     viewBoxHeight number,
     imageWidth varchar2(100),
     imageHeight varchar2(100),
+    custom_attributes varchar2(32000),
     shapes t_shapes,
     strokes t_strokes,
     classes t_classes,
@@ -460,14 +465,16 @@ FUNCTION f_new_shape (
     p_image_reference varchar2 default zt_svg.gcDefaultIndex,
     p_shape_type varchar2,
     p_id varchar2 default null,
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
     p_transform r_transform default null,
-    p_custom_attributes varchar2 default null
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) RETURN pls_integer IS
 
     lnIndex pls_integer;
@@ -507,6 +514,12 @@ BEGIN
     else
         grImages(p_image_reference).shapes(lnIndex).stroke := p_stroke;
     end if;
+
+    --draw in defs
+    grImages(p_image_reference).shapes(lnIndex).draw_in_defs_yn := p_draw_in_defs_yn;
+
+    --tooltip
+    grImages(p_image_reference).shapes(lnIndex).tooltip := p_tooltip;
 
     RETURN lnIndex;
 END f_new_shape;
@@ -554,11 +567,14 @@ FUNCTION f_draw_line (
     p_x2 number,
     p_y2 number,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) RETURN pls_integer IS
 
     lnIndex pls_integer;
@@ -574,7 +590,10 @@ BEGIN
         p_style => p_style,
         p_class_name => p_class_name,
         p_url => p_url,
-        p_transform => p_transform
+        p_transform => p_transform,
+        p_custom_attributes => p_custom_attributes,
+        p_draw_in_defs_yn => p_draw_in_defs_yn,
+        p_tooltip => p_tooltip
     );
 
     --shape-specific attributes
@@ -596,11 +615,14 @@ PROCEDURE p_draw_line (
     p_x2 number,
     p_y2 number,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) IS
 
     lnID pls_integer;
@@ -614,7 +636,10 @@ BEGIN
         p_style,
         p_class_name,
         p_url,
-        p_transform
+        p_transform,
+        p_custom_attributes,
+        p_draw_in_defs_yn,
+        p_tooltip
     );
 END p_draw_line;
 
@@ -626,14 +651,16 @@ FUNCTION f_draw_circle (
     p_center_x number,
     p_center_y number,
     p_radius number,
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
     p_transform r_transform default null,
-    p_custom_attributes varchar2 default null
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) RETURN pls_integer IS
 
     lnIndex pls_integer;
@@ -651,7 +678,9 @@ BEGIN
         p_class_name => p_class_name,
         p_url => p_url,
         p_transform => p_transform,
-        p_custom_attributes => p_custom_attributes
+        p_custom_attributes => p_custom_attributes,
+        p_draw_in_defs_yn => p_draw_in_defs_yn,
+        p_tooltip => p_tooltip
     );
 
     --shape-specific attributes
@@ -671,14 +700,16 @@ PROCEDURE p_draw_circle (
     p_center_x number,
     p_center_y number,
     p_radius number,
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
     p_transform r_transform default null,
-    p_custom_attributes varchar2 default null
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) IS
 
     lnID pls_integer;
@@ -694,7 +725,9 @@ BEGIN
         p_class_name,
         p_url,
         p_transform,
-        p_custom_attributes
+        p_custom_attributes,
+        p_draw_in_defs_yn,
+        p_tooltip
     );
     
 END p_draw_circle;
@@ -708,13 +741,16 @@ FUNCTION f_draw_ellipse (
     p_center_y number,
     p_radius_x number,
     p_radius_y number,
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) RETURN pls_integer IS
 
     lnIndex pls_integer;
@@ -731,7 +767,10 @@ BEGIN
         p_style => p_style,
         p_class_name => p_class_name,
         p_url => p_url,
-        p_transform => p_transform
+        p_transform => p_transform,
+        p_custom_attributes => p_custom_attributes,
+        p_draw_in_defs_yn => p_draw_in_defs_yn,
+        p_tooltip => p_tooltip
     );
 
     --shape-specific attributes
@@ -753,13 +792,16 @@ PROCEDURE p_draw_ellipse (
     p_center_y number,
     p_radius_x number,
     p_radius_y number,
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) IS
 
     lnID pls_integer;
@@ -774,7 +816,10 @@ BEGIN
         p_style,
         p_class_name,
         p_url,
-        p_transform
+        p_transform,
+        p_custom_attributes,
+        p_draw_in_defs_yn,
+        p_tooltip
     );
     
 END p_draw_ellipse;
@@ -789,13 +834,16 @@ FUNCTION f_draw_rectangle (
     p_height number,
     p_radius_x number default null,
     p_radius_y number default null,
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) RETURN pls_integer IS
 
     lnIndex pls_integer;
@@ -812,7 +860,10 @@ BEGIN
         p_style => p_style,
         p_class_name => p_class_name,
         p_url => p_url,
-        p_transform => p_transform
+        p_transform => p_transform,
+        p_custom_attributes => p_custom_attributes,
+        p_draw_in_defs_yn => p_draw_in_defs_yn,
+        p_tooltip => p_tooltip
     );
 
     --shape-specific attributes
@@ -837,13 +888,16 @@ PROCEDURE p_draw_rectangle (
     p_height number,
     p_radius_x number default null,
     p_radius_y number default null,
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) IS
 
     lnID pls_integer;
@@ -858,7 +912,10 @@ BEGIN
         p_style,
         p_class_name,
         p_url,
-        p_transform
+        p_transform,
+        p_custom_attributes,
+        p_draw_in_defs_yn,
+        p_tooltip
     );
     
 END p_draw_rectangle;
@@ -870,13 +927,16 @@ FUNCTION f_draw_polyline (
     p_id varchar2 default null,
     p_points zt_svg.t_points,
     p_close_yn varchar2 default 'N',
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) RETURN pls_integer IS
 
     lnIndex pls_integer;
@@ -893,7 +953,10 @@ BEGIN
         p_style => p_style,
         p_class_name => p_class_name,
         p_url => p_url,
-        p_transform => p_transform
+        p_transform => p_transform,
+        p_custom_attributes => p_custom_attributes,
+        p_draw_in_defs_yn => p_draw_in_defs_yn,
+        p_tooltip => p_tooltip
     );
 
     --shape-specific attributes
@@ -910,13 +973,16 @@ PROCEDURE p_draw_polyline (
     p_id varchar2 default null,
     p_points zt_svg.t_points,
     p_close_yn varchar2 default 'N',
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) IS
 
     lnID pls_integer;
@@ -931,7 +997,10 @@ BEGIN
         p_style,
         p_class_name,
         p_url,
-        p_transform
+        p_transform,
+        p_custom_attributes,
+        p_draw_in_defs_yn,
+        p_tooltip
     );
 END p_draw_polyline;
 
@@ -949,13 +1018,18 @@ FUNCTION f_draw_text (
     p_text varchar2,
     p_font_ref varchar2 default null,
     p_font r_font default grDefaultFont,
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null,
+    p_align_h varchar2 default null,
+    p_align_v varchar2 default null
 ) RETURN pls_integer IS
 
     lnIndex pls_integer;
@@ -972,7 +1046,10 @@ BEGIN
         p_style => p_style,
         p_class_name => p_class_name,
         p_url => p_url,
-        p_transform => p_transform
+        p_transform => p_transform,
+        p_custom_attributes => p_custom_attributes,
+        p_draw_in_defs_yn => p_draw_in_defs_yn,
+        p_tooltip => p_tooltip
     );
 
     --shape-specific attributes
@@ -984,6 +1061,8 @@ BEGIN
     grImages(p_image_reference).shapes(lnIndex).text_data.text := p_text;
     grImages(p_image_reference).shapes(lnIndex).text_data.font := p_font;
     grImages(p_image_reference).shapes(lnIndex).text_data.font_reference := p_font_ref;
+    grImages(p_image_reference).shapes(lnIndex).text_data.align_h := p_align_h;
+    grImages(p_image_reference).shapes(lnIndex).text_data.align_v := p_align_v;
     
     RETURN lnIndex;
 
@@ -1000,13 +1079,18 @@ PROCEDURE p_draw_text (
     p_text varchar2,
     p_font_ref varchar2 default null,
     p_font r_font default grDefaultFont,
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null,
+    p_align_h varchar2 default null,
+    p_align_v varchar2 default null
 ) IS
 
     lnID pls_integer;
@@ -1023,7 +1107,11 @@ BEGIN
         p_style,
         p_class_name,
         p_url,
-        p_transform
+        p_transform,
+        p_custom_attributes,
+        p_draw_in_defs_yn,
+        p_tooltip,
+        p_align_h, p_align_v
     );
 END p_draw_text;
 
@@ -1037,13 +1125,16 @@ FUNCTION f_draw_path (
     p_start_y number default 0,
     p_path_commands t_path_commands,
     p_close_path_yn varchar2 default 'N',
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) RETURN pls_integer IS
 
     lnIndex pls_integer;
@@ -1060,7 +1151,10 @@ BEGIN
         p_style => p_style,
         p_class_name => p_class_name,
         p_url => p_url,
-        p_transform => p_transform
+        p_transform => p_transform,
+        p_custom_attributes => p_custom_attributes,
+        p_draw_in_defs_yn => p_draw_in_defs_yn,
+        p_tooltip => p_tooltip
     );
 
     --shape-specific attributes
@@ -1080,13 +1174,16 @@ PROCEDURE p_draw_path (
     p_start_y number default 0,
     p_path_commands t_path_commands,
     p_close_path_yn varchar2 default 'N',
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) IS
 
     lnID pls_integer;
@@ -1103,7 +1200,10 @@ BEGIN
         p_style,
         p_class_name,
         p_url,
-        p_transform
+        p_transform,
+        p_custom_attributes,
+        p_draw_in_defs_yn,
+        p_tooltip
     );
 END p_draw_path;
 
@@ -1112,7 +1212,9 @@ END p_draw_path;
 FUNCTION f_draw_custom (
     p_image_reference varchar2 default zt_svg.gcDefaultIndex,
     p_custom_tag clob,
-    p_url r_url default null
+    p_url r_url default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) RETURN pls_integer IS
 
     lnIndex pls_integer;
@@ -1122,7 +1224,9 @@ BEGIN
     lnIndex := f_new_shape (
         p_image_reference => p_image_reference,
         p_shape_type => gcShapeTypeCustom,
-        p_url => p_url
+        p_url => p_url,
+        p_draw_in_defs_yn => p_draw_in_defs_yn,
+        p_tooltip => p_tooltip
     );
 
     --shape-specific attributes
@@ -1135,7 +1239,9 @@ END f_draw_custom;
 PROCEDURE p_draw_custom (
     p_image_reference varchar2 default zt_svg.gcDefaultIndex,
     p_custom_tag clob,
-    p_url r_url default null
+    p_url r_url default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) IS
 
     lnID pls_integer;
@@ -1144,7 +1250,9 @@ BEGIN
     lnID := f_draw_custom (
         p_image_reference,
         p_custom_tag,
-        p_url
+        p_url,
+        p_draw_in_defs_yn,
+        p_tooltip
     );
 END p_draw_custom;
 
@@ -1159,8 +1267,11 @@ FUNCTION f_insert_image (
     p_height number default null,
     p_image_url varchar2,
     p_image_or_use varchar2 default gcElementImage,
+    p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_tooltip varchar2 default null
 ) RETURN pls_integer IS
 
     lnIndex pls_integer;
@@ -1171,8 +1282,11 @@ BEGIN
         p_image_reference => p_image_reference,
         p_id => p_id,
         p_shape_type => gcShapeTypeImage,
+        p_class_name => p_class_name,
         p_url => p_url,
-        p_transform => p_transform
+        p_transform => p_transform,
+        p_custom_attributes => p_custom_attributes,
+        p_tooltip => p_tooltip
     );
 
     --shape-specific attributes
@@ -1196,8 +1310,11 @@ PROCEDURE p_insert_image (
     p_height number default null,
     p_image_url varchar2,
     p_image_or_use varchar2 default gcElementImage,
+    p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_tooltip varchar2 default null
 ) IS
 
     lnID pls_integer;
@@ -1209,8 +1326,11 @@ BEGIN
         p_x, p_y, p_width, p_height,
         p_image_url,
         p_image_or_use,
+        p_class_name,
         p_url,
-        p_transform
+        p_transform,
+        p_custom_attributes,
+        p_tooltip
     );
 END p_insert_image;
 
@@ -1219,13 +1339,16 @@ END p_insert_image;
 FUNCTION f_draw_group (
     p_image_reference varchar2 default zt_svg.gcDefaultIndex,
     p_id varchar2 default null,
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) RETURN pls_integer IS
 
     lnIndex pls_integer;
@@ -1242,7 +1365,10 @@ BEGIN
         p_style => p_style,
         p_class_name => p_class_name,
         p_url => p_url,
-        p_transform => p_transform
+        p_transform => p_transform,
+        p_custom_attributes => p_custom_attributes,
+        p_draw_in_defs_yn => p_draw_in_defs_yn,
+        p_tooltip => p_tooltip
     );
 
     --shape-specific attributes
@@ -1256,13 +1382,16 @@ END f_draw_group;
 PROCEDURE p_draw_group (
     p_image_reference varchar2 default zt_svg.gcDefaultIndex,
     p_id varchar2 default null,
-    p_fill zt_svg.r_fill default zt_svg.grDefaultFill,
+    p_fill zt_svg.r_fill default null,
     p_stroke_ref varchar2 default null,
-    p_stroke r_stroke default zt_svg.grDefaultStroke,
+    p_stroke r_stroke default null,
     p_style varchar2 default null,
     p_class_name varchar2 default null,
     p_url r_url default null,
-    p_transform r_transform default null
+    p_transform r_transform default null,
+    p_custom_attributes varchar2 default null,
+    p_draw_in_defs_yn varchar2 default 'N',
+    p_tooltip varchar2 default null
 ) IS
 
     lnID pls_integer;
@@ -1276,12 +1405,16 @@ BEGIN
         p_style,
         p_class_name,
         p_url,
-        p_transform
+        p_transform,
+        p_custom_attributes,
+        p_draw_in_defs_yn,
+        p_tooltip
     );
 END p_draw_group;
 
 PROCEDURE p_draw_group_end (
-    p_image_reference varchar2 default zt_svg.gcDefaultIndex
+    p_image_reference varchar2 default zt_svg.gcDefaultIndex,
+    p_draw_in_defs_yn varchar2 default 'N'
 ) IS
 
     lnIndex pls_integer;
@@ -1290,7 +1423,8 @@ BEGIN
     --add new shape
     lnIndex := f_new_shape (
         p_image_reference => p_image_reference,
-        p_shape_type => gcShapeTypeGroupEnd
+        p_shape_type => gcShapeTypeGroupEnd,
+        p_draw_in_defs_yn => p_draw_in_defs_yn
     );
     
 END p_draw_group_end;
@@ -1306,7 +1440,8 @@ PROCEDURE p_new_image (
     p_viewbox_width number default null,
     p_viewbox_height number default null,
     p_image_width varchar2 default null,
-    p_image_height varchar2 default null
+    p_image_height varchar2 default null,
+    p_custom_attributes varchar2 default null
 ) IS
 BEGIN
     --clear image
@@ -1326,6 +1461,10 @@ BEGIN
     grImages(p_image_reference).viewBoxHeight := p_viewbox_height;
     grImages(p_image_reference).imageWidth := p_image_width;
     grImages(p_image_reference).imageHeight := p_image_height;
+    
+    --custom attributes
+    grImages(p_image_reference).custom_attributes := p_custom_attributes;
+    
 END p_new_image;
 
 
@@ -1414,6 +1553,7 @@ FUNCTION f_get_shape_script (
     lcFont varchar2(4000);
     lcTransform varchar2(4000);
     lcCustomAttributes varchar2(32000);
+    lcTooltip varchar2(5000);
 
     lcScript clob;
 
@@ -1517,6 +1657,11 @@ BEGIN
     lcCustomAttributes := CASE WHEN p_shape.custom_attributes is not null THEN p_shape.custom_attributes || ' ' ELSE null END;
 
 
+    --tooltip / title
+    if p_shape.tooltip is not null then
+        lcTooltip := '<title>' || p_shape.tooltip || '</title>';
+    end if;
+
     --shape-specific attributes
     if p_shape.shape_type = gcShapeTypeLine then
         p_add(lcScript, '<line ', null, 1);
@@ -1527,7 +1672,7 @@ BEGIN
 
         p_add(lcScript, lcId || lcStyle || lcClass || lcStroke || lcFill || lcTransform || lcCustomAttributes, null);
         
-        p_add(lcScript, '/>');
+        p_add(lcScript, '>' || lcTooltip || '</line>');
 
     elsif p_shape.shape_type = gcShapeTypeCircle then
         p_add(lcScript, '<circle ', null, 1);
@@ -1537,7 +1682,7 @@ BEGIN
         p_add(lcScript, 'r="' || p_shape.circle_data.radius || '" ', null);
 
         p_add(lcScript, lcId || lcStyle || lcClass || lcStroke || lcFill || lcTransform || lcCustomAttributes, null);
-        p_add(lcScript, '/>');
+        p_add(lcScript, '>' || lcTooltip || '</circle>');
 
     elsif p_shape.shape_type = gcShapeTypeEllipse then
         p_add(lcScript, '<ellipse ', null, 1);
@@ -1548,7 +1693,7 @@ BEGIN
         p_add(lcScript, 'ry="' || p_shape.ellipse_data.radius_y || '" ', null);
 
         p_add(lcScript, lcId || lcStyle || lcClass || lcStroke || lcFill || lcTransform || lcCustomAttributes, null);
-        p_add(lcScript, '/>');
+        p_add(lcScript, '>' || lcTooltip || '</ellipse>');
 
     elsif p_shape.shape_type = gcShapeTypeRectangle then
         p_add(lcScript, '<rect ', null, 1);
@@ -1568,7 +1713,7 @@ BEGIN
         
 
         p_add(lcScript, lcId || lcStyle || lcClass || lcStroke || lcFill || lcTransform || lcCustomAttributes, null);
-        p_add(lcScript, '/>');
+        p_add(lcScript, '>' || lcTooltip || '</rect>');
 
     elsif p_shape.shape_type = gcShapeTypePolyline then
         p_add(lcScript, '<' || CASE WHEN p_shape.polyline_data.close_yn = 'Y' THEN 'polygon' ELSE 'polyline' END || ' ', null, 1);
@@ -1588,7 +1733,7 @@ BEGIN
 
         p_add(lcScript, lcId || lcStyle || lcClass || lcStroke || lcFill || lcTransform || lcCustomAttributes, null);
         
-        p_add(lcScript, '/>');
+        p_add(lcScript, '>' || lcTooltip || '</'|| CASE WHEN p_shape.polyline_data.close_yn = 'Y' THEN 'polygon' ELSE 'polyline' END || '>');
 
     elsif p_shape.shape_type in (gcShapeTypeText, gcShapeTypeSubText) then
     
@@ -1613,6 +1758,9 @@ BEGIN
             p_add_attr(lcScript, 'y', p_shape.text_data.y);
             p_add_attr(lcScript, 'dx', p_shape.text_data.dx);
             p_add_attr(lcScript, 'dy', p_shape.text_data.dy);
+
+            p_add_attr(lcScript, 'text-anchor', p_shape.text_data.align_h);
+            p_add_attr(lcScript, 'dominant-baseline', p_shape.text_data.align_v);
 
             p_add(lcScript, lcId || lcStyle || lcClass || lcStroke || lcFill || lcFont || lcTransform || lcCustomAttributes, null);
             p_add(lcScript, '>' || p_shape.text_data.text, null);
@@ -1747,7 +1895,7 @@ BEGIN
         
 
         p_add(lcScript, '" ' || lcId || lcStyle || lcClass || lcStroke || lcFill || lcTransform || lcCustomAttributes, null);
-        p_add(lcScript, '/>');
+        p_add(lcScript, '>' || lcTooltip || '</path>');
 
     elsif p_shape.shape_type = gcShapeTypeCustom then
         p_add(lcScript, p_shape.custom_tag, null, 1);
@@ -1763,7 +1911,7 @@ BEGIN
 
         p_add(lcScript, lcId || lcStyle || lcClass || lcStroke || lcFill || lcTransform || lcCustomAttributes, null);
         
-        p_add(lcScript, '/>');
+        p_add(lcScript, '>' || lcTooltip || '</' || p_shape.image_import_data.image_or_use || '>');
 
     elsif p_shape.shape_type = gcShapeTypeGroup then
 
@@ -1796,9 +1944,29 @@ FUNCTION f_finish_image (
 
     lcImage clob;
 
+    PROCEDURE p_draw_shapes (
+        p_draw_in_defs_yn varchar2
+    ) IS
+    BEGIN
+        FOR obj IN 1 .. grImages(p_image_reference).shapes.count LOOP
+
+            if grImages(p_image_reference).shapes(obj).draw_in_defs_yn = p_draw_in_defs_yn then
+                p_add (
+                    lcImage,
+                    f_get_shape_script (
+                        p_image_reference => p_image_reference,
+                        p_shape => grImages(p_image_reference).shapes(obj),
+                        p_shape_index => obj
+                    )
+                );
+            end if;
+        
+        END LOOP;
+    END p_draw_shapes;
+
 BEGIN
     --initialize SVG and dimensions
-    p_add(lcImage, '<svg xmlns="http://www.w3.org/2000/svg"');
+    p_add(lcImage, '<svg xmlns="http://www.w3.org/2000/svg"', ' ');
 
     if 
             grImages(p_image_reference).viewBoxX is not null
@@ -1819,31 +1987,41 @@ BEGIN
 
     p_add_attr(lcImage, 'width', grImages(p_image_reference).imageWidth);
     p_add_attr(lcImage, 'height', grImages(p_image_reference).imageHeight);
+    
+    if grImages(p_image_reference).custom_attributes is not null then
+        p_add(
+            p_text => lcImage, 
+            p_text_to_add => grImages(p_image_reference).custom_attributes,
+            p_tabs => 1
+        );
+    end if;
 
-    /*
+    --default stroke and fill
     p_add(
         p_text => lcImage, 
-        p_text_to_add => 'width="' || grImages(p_image_reference).imageWidth || '"',
-        p_tabs => 1
+        p_text_to_add => f_shape_stroke(grDefaultStroke),
+        p_separator => ' '
     );
+
     p_add(
         p_text => lcImage, 
-        p_text_to_add => 'height="' || grImages(p_image_reference).imageheight || '"',
-        p_tabs => 1
+        p_text_to_add => f_shape_fill(grDefaultFill),
+        p_separator => ' '
     );
-    */
 
+    --close SVG tag
     p_add(lcImage, '>');
     
+
+    p_add(
+        p_text => lcImage, 
+        p_text_to_add => '<defs>', 
+        p_tabs => 1
+    );
     
     --add classes
     if grImages(p_image_reference).classes.count > 0 then
 
-        p_add(
-            p_text => lcImage, 
-            p_text_to_add => '<defs>', 
-            p_tabs => 1
-        );
         p_add(
             p_text => lcImage, 
             p_text_to_add => '<style type="text/css">', 
@@ -1899,16 +2077,21 @@ BEGIN
             p_text_to_add => '</style>', 
             p_tabs => 2
         );
-        p_add(
-            p_text => lcImage, 
-            p_text_to_add => '</defs>', 
-            p_tabs => 1
-        );
 
     end if;
+
+    p_draw_shapes(p_draw_in_defs_yn => 'Y');
+
+    p_add(
+        p_text => lcImage, 
+        p_text_to_add => '</defs>', 
+        p_tabs => 1
+    );
     
 
     --draw shapes
+    p_draw_shapes(p_draw_in_defs_yn => 'N');
+/*
     FOR obj IN 1 .. grImages(p_image_reference).shapes.count LOOP
 
         p_add (
@@ -1921,7 +2104,7 @@ BEGIN
         );
     
     END LOOP;
-
+*/
 
     --close svg
     p_add(lcImage, '</svg>');

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="1024"
+   height="768"
+   viewBox="0 0 1024 768"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
+   sodipodi:docname="RedFloor.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     showgrid="true"
+     inkscape:zoom="1.1614583"
+     inkscape:cx="491.19284"
+     inkscape:cy="385.72198"
+     inkscape:window-width="2560"
+     inkscape:window-height="1377"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     showguides="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2772"
+       dotted="false"
+       spacingx="5"
+       spacingy="5" />
+  </sodipodi:namedview>
+  <defs
+     id="defs2">
+    <marker
+       style="overflow:visible"
+       id="Arrow2"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Arrow2"
+       markerWidth="7.6999998"
+       markerHeight="5.5999999"
+       viewBox="0 0 7.7 5.6"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.7)"
+         d="M -2,-4 9,0 -2,4 c 2,-2.33 2,-5.66 0,-8 z"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         id="arrow2L" />
+    </marker>
+    <pattern
+       inkscape:collect="always"
+       xlink:href="#Strips1_1"
+       id="pattern8466"
+       patternTransform="matrix(2.792758,2.3937925,-2.7067361,1.7045335,5.5555556,-192.85714)" />
+    <pattern
+       inkscape:collect="always"
+       patternUnits="userSpaceOnUse"
+       width="2"
+       height="1"
+       patternTransform="translate(0,0) scale(10,10)"
+       id="Strips1_1"
+       inkscape:stockid="Stripes 1:1"
+       inkscape:isstock="true">
+      <rect
+         style="fill:black;stroke:none"
+         x="0"
+         y="-0.5"
+         width="1"
+         height="2"
+         id="rect6591" />
+    </pattern>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#ffd5d5;stroke:#000000;stroke-width:4.999;stroke-dasharray:none"
+       id="rect788"
+       width="975"
+       height="550.00024"
+       x="25"
+       y="49.999878" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 875,600 V 425"
+       id="path5321" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 750.5,600 V 425"
+       id="path5332" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 625.5,600 V 425"
+       id="path5334" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 500.5,600 V 425"
+       id="path5336" />
+    <rect
+       style="fill:url(#pattern8466);fill-opacity:1;stroke:none;stroke-width:0.666667"
+       id="rect5593"
+       width="175"
+       height="100"
+       x="25"
+       y="50"
+       ry="0" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 25.000003,299.5 H 200"
+       id="path8468" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 25.000003,150.5 H 200"
+       id="path8470" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 875,225 V 50"
+       id="path8490" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 750.5,225 V 50"
+       id="path8492" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 625.5,225 V 50"
+       id="path8494" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 500.5,225 V 50"
+       id="path8496" />
+    <path
+       style="fill:#000000;stroke:none;stroke-width:4.999;stroke-dasharray:none"
+       d="M 1000,325 H 825"
+       id="path8605" />
+    <path
+       style="fill:#000000;stroke:#000000;stroke-width:2.5;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2)"
+       d="M 375,475 V 250"
+       id="path8663" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
+       x="306.40625"
+       y="186.71094"
+       id="text8978"><tspan
+         sodipodi:role="line"
+         id="tspan8976"
+         x="306.40625"
+         y="186.71094">Drive Direction</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:32px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#002b22;fill-opacity:1;stroke:none;stroke-width:2.5;stroke-dasharray:none;stroke-opacity:1"
+       x="662.96875"
+       y="323.75"
+       id="text9958"><tspan
+         sodipodi:role="line"
+         id="tspan9956"
+         x="662.96875"
+         y="323.75">RED FLOOR</tspan></text>
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 25.000003,374.5 H 200"
+       id="path2376" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 25.000003,449.5 H 200"
+       id="path2378" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 25.000003,525.5 H 200"
+       id="path2380" />
+    <path
+       style="fill:#cccccc;stroke:#000000"
+       d="M 25.000002,224.5 H 200"
+       id="path2414" />
+  </g>
+</svg>
