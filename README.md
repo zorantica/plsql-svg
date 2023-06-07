@@ -26,6 +26,8 @@ At the end finish the image using function f_finish_image, which returns XML sou
 ## Demo
 A demo script together with demo package and APEX application is located under "demo" directory.
 
+### Install the demo on Your environment
+
 First execute the script tables_and_data.sql, which will create demo tables and populate them with data.
 
 Then install demo database package ZT_SVG_DEMO (specification and body).
@@ -35,3 +37,10 @@ At the end import APEX demo aplication and run it.
 *Demo script and package should be installed in a database schema assigned to a workspace, where is the application imported.* 
 
 ![demo/demo_01.png](demo/demo_01.png)
+
+### Demo App on apex.oracle.com
+
+[https://apex.oracle.com/pls/apex/f?p=ztsvg](https://apex.oracle.com/pls/apex/f?p=ztsvg)
+
+uid: demo
+pwd: demodemo
