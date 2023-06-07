@@ -8,14 +8,18 @@ CREATE TABLE parking_floors (
     background_image varchar2(1000) not null
 );
 
-INSERT INTO parking_floors (floor_id, name, background_image)
-VALUES ('BLUE', 'Blue floor', 'parking/BlueFloor.svg');
-
-INSERT INTO parking_floors (floor_id, name, background_image)
-VALUES ('RED', 'Red floor', 'parking/RedFloor.svg');
-
-INSERT INTO parking_floors (floor_id, name, background_image)
-VALUES ('YELLOW', 'Yellow floor', 'parking/YellowFloor.svg');
+Insert into PARKING_FLOORS
+   (FLOOR_ID, NAME, BACKGROUND_IMAGE)
+ Values
+   ('BLUE', 'Blue floor', 'svg/parking/FloorBlue.svg');
+Insert into PARKING_FLOORS
+   (FLOOR_ID, NAME, BACKGROUND_IMAGE)
+ Values
+   ('RED', 'Red floor', 'svg/parking/FloorRed.svg');
+Insert into PARKING_FLOORS
+   (FLOOR_ID, NAME, BACKGROUND_IMAGE)
+ Values
+   ('YELLOW', 'Yellow floor', 'svg/parking/FloorYellow.svg');
 
 COMMIT;
 
